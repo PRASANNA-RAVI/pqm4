@@ -1,5 +1,5 @@
 # pqm4
-Post-quantum crypto library for the ARM Cortex-M4 with Optimized implementation of Dilithium's Signing Procedure.
+Post-quantum crypto library for the ARM Cortex-M4 with Optimized implementation of Dilithium's Signing Procedure. This work has been accepted to CARDIS-2019.
 
 ## Introduction
 The **pqm4** library, benchmarking and testing framework started as a result of the
