@@ -1,11 +1,12 @@
 # pqm4
-Post-quantum crypto library for the ARM Cortex-M4
+Post-quantum crypto library for the ARM Cortex-M4 with Optimized implementation of Dilithium's Signing Procedure.
 
 ## Introduction
 The **pqm4** library, benchmarking and testing framework started as a result of the
 [PQCRYPTO](https://pqcrypto.eu.org) project funded by the European Commission in the H2020 program.
 It currently contains implementations post-quantum key-encapsulation mechanisms
 and post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
+Dilithium is one of the lattice-based signature schemes which is also part of the pqm4 library.
 In this work, we have optimized the performance of Dilithium's signing procedure based on ideas presented in the paper found in the link below:
 
 https://eprint.iacr.org/2019/420.pdf
