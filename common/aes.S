@@ -576,7 +576,7 @@ aes128_encrypt_asm:
     eor r0, r0, r4, ror #8
     eor r1, r1, r5, ror #8
     eor r2, r2, r6, ror #8
-    pop.w {r4}
+    pop {r4}
     eor r3, r3, r7, ror #8
 
     //write output
@@ -902,7 +902,7 @@ aes192_encrypt_asm:
     eor r0, r0, r4, ror #8
     eor r1, r1, r5, ror #8
     eor r2, r2, r6, ror #8
-    pop.w {r4}
+    pop {r4}
     eor r3, r3, r7, ror #8
 
     //write output
@@ -1312,7 +1312,7 @@ aes256_encrypt_asm:
     eor r0, r0, r4, ror #8
     eor r1, r1, r5, ror #8
     eor r2, r2, r6, ror #8
-    pop.w {r4}
+    pop {r4}
     eor r3, r3, r7, ror #8
 
     //write output

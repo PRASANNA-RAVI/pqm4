@@ -2,10 +2,18 @@
 Post-quantum crypto library for the ARM Cortex-M4
 
 ## Introduction
-The **pqm4** library, benchmarking and testing framework started as a result of the 
-[PQCRYPTO](https://pqcrypto.eu.org) project funded by the European Commission in the H2020 program. 
+The **pqm4** library, benchmarking and testing framework started as a result of the
+[PQCRYPTO](https://pqcrypto.eu.org) project funded by the European Commission in the H2020 program.
 It currently contains implementations post-quantum key-encapsulation mechanisms
 and post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
+In this work, we have optimized the performance of Dilithium's signing procedure based on ideas presented in the paper found in the link below:
+
+https://eprint.iacr.org/2019/420.pdf
+
+The implementations present in this work are Round2 candidates of the NIST standardization process for Post-Quantum cryptography.
+
+The optimized Dilithium implementations are present in the folder crypto_sign/dilithium2, crypto_sign/dilithium3, crypto_sign/dilithium4. The instructions to compile and run the implementations are stated below.
+
 The design goals of the library are to offer
 * automated functional testing on a widely available development board;
 * automated generation of test vectors and comparison against output
@@ -16,18 +24,17 @@ The design goals of the library are to offer
 * integration of clean implementations from [PQClean](https://github.com/PQClean/PQClean); and
 * easy integration of new schemes and implementations into the framework.
 
-
-## Changes in Round 2
+<!-- ## Changes in Round 2
 For the second round of the NIST PQC, **pqm4** was extended (see [#78](https://github.com/mupq/pqm4/pull/78)) with the following features:
 - common code was moved to [mupq](https://github.com/mupq/mupq) for reuse in [pqriscv](https://github.com/mupq/pqriscv),
 - much simpler build process,
 - automated profiling of cycles spent in symmetric primitives (SHA-2, SHA-3, AES),
 - reporting of code-size,
-- integration of clean implementations from [PQClean](https://github.com/PQClean/PQClean).
+- integration of clean implementations from [PQClean](https://github.com/PQClean/PQClean). -->
 
 ## Schemes included in pqm4
 
-For most of the schemes there are multiple implementations. 
+For most of the schemes there are multiple implementations.
 The naming scheme for these implementations is as follows:
 * `clean`: clean reference implementation from [PQClean](https://github.com/PQClean/PQClean),
 * `ref`: the reference implementation submitted to NIST (will be replaced by `clean` in the long term),
@@ -35,10 +42,10 @@ The naming scheme for these implementations is as follows:
 * `m4`: an implementation with Cortex-M4 specific optimizations (typically in assembly).
 
 ## Setup/Installation
-The testing and benchmarking framework of **pqm4** targets the 
+The testing and benchmarking framework of **pqm4** targets the
 [STM32F4 Discovery board](http://www.st.com/en/evaluation-tools/stm32f4discovery.html)
 featuring an ARM Cortex-M4 CPU, 1MB of Flash, and 192KB of RAM.
-Connecting the development to the host computer requires a 
+Connecting the development to the host computer requires a
 mini-USB cable and a USB-TTL converter together with a 2-pin dupont / jumper cable.
 
 ### Installing the ARM toolchain
@@ -48,33 +55,33 @@ On most Linux systems, the correct toolchain gets installed when you install the
 On some Linux distributions, you will also have to explicitly install `libnewlib-arm-none-eabi` .
 
 ### Installing stlink
-To flash binaries onto the development board, **pqm4** is using [stlink](https://github.com/texane/stlink). 
+To flash binaries onto the development board, **pqm4** is using [stlink](https://github.com/texane/stlink).
 Depending on your operating system, stlink may be available in your package manager -- if not, please
-refer to the stlink Github page for instructions on how to [compile it from source](https://github.com/texane/stlink/blob/master/doc/compiling.md) 
+refer to the stlink Github page for instructions on how to [compile it from source](https://github.com/texane/stlink/blob/master/doc/compiling.md)
 (in that case, be careful to use libusb-1.0.0-dev, not libusb-0.1).
 
-### Python3 
+### Python3
 The benchmarking scripts used in **pqm4** require Python >= 3.6.
 
 ### Installing pyserial
-The host-side Python code requires the [pyserial](https://github.com/pyserial/pyserial) module. 
-Your package repository might offer `python-serial` or `python-pyserial` directly 
-(as of writing, this is the case for Ubuntu, Debian and Arch). 
-Alternatively, this can be easily installed from PyPA by calling `pip install -r requirements.txt` 
-(or `pip3`, depending on your system). 
-If you do not have `pip` installed yet, you can typically find it as `python3-pip` using your package manager. 
+The host-side Python code requires the [pyserial](https://github.com/pyserial/pyserial) module.
+Your package repository might offer `python-serial` or `python-pyserial` directly
+(as of writing, this is the case for Ubuntu, Debian and Arch).
+Alternatively, this can be easily installed from PyPA by calling `pip install -r requirements.txt`
+(or `pip3`, depending on your system).
+If you do not have `pip` installed yet, you can typically find it as `python3-pip` using your package manager.
 
 ### Connecting the board to the host
-Connect the board to your host machine using the mini-USB port. 
-This provides it with power, and allows you to flash binaries onto the board. 
+Connect the board to your host machine using the mini-USB port.
+This provides it with power, and allows you to flash binaries onto the board.
 It should show up in `lsusb` as `STMicroelectronics ST-LINK/V2`.
 
-If you are using a UART-USB connector that has a PL2303 chip on board (which appears to be the most common), 
-the driver should be loaded in your kernel by default. If it is not, it is typically called `pl2303`. 
-On macOS, you will still need to [install it](http://www.prolific.com.tw/US/ShowProduct.aspx?p_id=229&pcid=41) (and reboot). 
+If you are using a UART-USB connector that has a PL2303 chip on board (which appears to be the most common),
+the driver should be loaded in your kernel by default. If it is not, it is typically called `pl2303`.
+On macOS, you will still need to [install it](http://www.prolific.com.tw/US/ShowProduct.aspx?p_id=229&pcid=41) (and reboot).
 When you plug in the device, it should show up as `Prolific Technology, Inc. PL2303 Serial Port` when you type `lsusb`.
 
-Using dupont / jumper cables, connect the `TX`/`TXD` pin of the USB connector to the `PA3` pin on the board, and connect `RX`/`RXD` to `PA2`. 
+Using dupont / jumper cables, connect the `TX`/`TXD` pin of the USB connector to the `PA3` pin on the board, and connect `RX`/`RXD` to `PA2`.
 Depending on your setup, you may also want to connect the `GND` pins.
 
 ### Downloading pqm4 and libopencm3
@@ -87,7 +94,7 @@ To test that everything builds execute `python3 build_everything.py`.
 ## API documentation
 The **pqm4** library uses the NIST/SUPERCOP/[PQClean API](https://github.com/PQClean/PQClean). It is mandated for all included schemes.
 
-KEMs need to define `CRYPTO_SECRETKEYBYTES`, `CRYPTO_PUBLICKEYBYTES`, `CRYPTO_BYTES`, and `CRYPTO_CIPHERTEXTBYTES` and implement 
+KEMs need to define `CRYPTO_SECRETKEYBYTES`, `CRYPTO_PUBLICKEYBYTES`, `CRYPTO_BYTES`, and `CRYPTO_CIPHERTEXTBYTES` and implement
 ```c
 int crypto_kem_keypair(unsigned char *pk, unsigned char *sk);
 int crypto_kem_enc(unsigned char *ct, unsigned char *ss, const unsigned char *pk);
@@ -97,7 +104,7 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 Signature schemes need to define `CRYPTO_SECRETKEYBYTES`, `CRYPTO_PUBLICKEYBYTES`, and `CRYPTO_BYTES` and implement
 ```c
 int crypto_sign_keypair(unsigned char *pk, unsigned char *sk);
-int crypto_sign(unsigned char *sm, size_t *smlen, 
+int crypto_sign(unsigned char *sm, size_t *smlen,
                 const unsigned char *msg, size_t len,
                 const unsigned char *sk);
 int crypto_sign_open(unsigned char *m, size_t *mlen,
@@ -107,25 +114,25 @@ int crypto_sign_open(unsigned char *m, size_t *mlen,
 
 
 ## Running tests and benchmarks
-Executing `python3 build_everything.py` compiles six binaries for each implemenation which can be used to test and benchmark the schemes. For example, for the reference implementation of  [NewHope-1024-CCA-KEM](https://newhopecrypto.org) the following binaries are assembled: 
+Executing `python3 build_everything.py` compiles six binaries for each implemenation which can be used to test and benchmark the schemes. For example, for the reference implementation of  [NewHope-1024-CCA-KEM](https://newhopecrypto.org) the following binaries are assembled:
  - `bin/crypto_kem_newhope1024cca_ref_test.bin` tests if the scheme works as expected. For KEMs this tests if Alice and Bob derive the same shared key and for signature schemes it tests if a generated signature can be verified correctly. Several failure cases are also checked, see [mupq/crypto_kem/test.c](mupq/crypto_kem/test.c) and [mupq/crypto_sign/test.c](mupq/crypto_sign/test.c) for details.  
  - `bin/crypto_kem_newhope1024cca_ref_speed.bin` measures the runtime of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/speed.c](mupq/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](mupq/crypto_sign/speed.c).   
  - `bin/crypto_kem_newhope1024cca_ref_hashing.bin` measures the cycles spent in SHA-2, SHA-3, and AES of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/hashing.c](mupq/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](mupq/crypto_sign/speed.c).   
  - `bin/crypto_kem_newhope1024cca_ref_stack.bin` measures the stack consumption of each of the procedures involved. The memory allocated outside of the procedures (e.g., public keys, private keys, ciphertexts, signatures) is not included. See [mupq/crypto_kem/stack.c](mupq/crypto_kem/stack.c) and [mupq/crypto_sign/stack.c](mupq/crypto_sign/stack.c).    
  - `bin/crypto_kem_newhope1024cca_ref_testvectors.bin` uses a deterministic random number generator to generate testvectors for the implementation. These can be used to cross-check different implemenatations of the same scheme. See [mupq/crypto_kem/testvectors.c](mupq/crypto_kem/testvectors.c) and [mupq/crypto_sign/testvectors.c](mupq/crypto_sign/testvectors.c).   
-- `bin-host/crypto_kem_newhope1024cca_ref_testvectors` uses the same deterministic random number generator to create the testvectors on your host. See [mupq/crypto_kem/testvectors-host.c](mupq/crypto_kem/testvectors-host.c) and [mupq/crypto_sign/testvectors-host.c](mupq/crypto_sign/testvectors-host.c). 
+- `bin-host/crypto_kem_newhope1024cca_ref_testvectors` uses the same deterministic random number generator to create the testvectors on your host. See [mupq/crypto_kem/testvectors-host.c](mupq/crypto_kem/testvectors-host.c) and [mupq/crypto_sign/testvectors-host.c](mupq/crypto_sign/testvectors-host.c).
 
-The binaries can be flashed to your board using `st-flash`, e.g., `st-flash write bin/crypto_kem_newhope1024cca_ref_test.bin 0x8000000`. To receive the output, run `python3 hostside/host_unidirectional.py`. 
+The binaries can be flashed to your board using `st-flash`, e.g., `st-flash write bin/crypto_kem_newhope1024cca_ref_test.bin 0x8000000`. To receive the output, run `python3 hostside/host_unidirectional.py`.
 
-The **pqm4** framework automates testing and benchmarking for all schemes using Python3 scripts: 
-- `python3 test.py`: flashes all test binaries to the boards and checks that no errors occur. 
-- `python3 testvectors.py`: flashes all testvector binaries to the boards and writes the testvectors to `testvectors/`. Additionally, it executes the reference implementations on your host machine. Afterwards, it checks the testvectors of different implementations of the same scheme for consistency. 
+The **pqm4** framework automates testing and benchmarking for all schemes using Python3 scripts:
+- `python3 test.py`: flashes all test binaries to the boards and checks that no errors occur.
+- `python3 testvectors.py`: flashes all testvector binaries to the boards and writes the testvectors to `testvectors/`. Additionally, it executes the reference implementations on your host machine. Afterwards, it checks the testvectors of different implementations of the same scheme for consistency.
 - `python3 benchmarks.py`: flashes the stack and speed binaries and writes the results to `benchmarks/stack/` and `benchmarks/speed/`. You may want to execute this several times for certain schemes for which the execution time varies significantly.
 
-In case you don't want to include all schemes, pass a list of schemes you want to include to any of the scripts, e.g., `python3 test.py newhope1024cca sphincs-shake256-128s`. 
+In case you don't want to include all schemes, pass a list of schemes you want to include to any of the scripts, e.g., `python3 test.py newhope1024cca sphincs-shake256-128s`.
 In case you want to exclude certain schemes pass `--exclude`, e.g., `python3 test.py --exclude saber`.
 
-The benchmark results (in `benchmarks/`) created by 
+The benchmark results (in `benchmarks/`) created by
 `python3 benchmarks.py` can be automatically converted to a markdown table using `python3 convert_benchmarks.py md` or to csv using `python3 convert_benchmarks.py csv`.
 
 ## Benchmarks
@@ -151,7 +158,7 @@ and implementations, if these implementations follow the NIST/SUPERCOP/PQClean A
 In case you want to contribute a reference implementation, please open a pull request to [PQClean](https://github.com/PQClean/PQClean).
 In case you want to contribute an optimized C implementation, please open a pull request to [mupq](https://github.com/mupq/mupq).
 In case you want to add an implementation optimized for the Cortex-M4, please open a pull request here.
- 
+
 In the following we consider the example of adding an M4-optimized implementation
 of [NewHope-512-CPA-KEM](https://newhopecrypto.org) to **pqm4**:
 
@@ -164,9 +171,9 @@ The procedure for adding a signature scheme is the same, except that it starts w
 new subdirectory under `crypto_sign/`.
 
 ### Using optimized FIPS202 (Keccak, SHA3, SHAKE)
-   Many schemes submitted to NIST use SHA-3, SHAKE or cSHAKE for hashing. 
+   Many schemes submitted to NIST use SHA-3, SHAKE or cSHAKE for hashing.
    This is why **pqm4** comes with highly optimized Keccak code that is accessible
-   from all KEM and signature implementations. 
+   from all KEM and signature implementations.
    Functions from the FIPS202 standard are defined in `mupq/common/fips202.h` as follows:
 
    ```c
@@ -219,8 +226,8 @@ new subdirectory under `crypto_sign/`.
   void cshake256(uint8_t *output, size_t outlen, const uint8_t *name, size_t namelen, const uint8_t* cstm, size_t cstmlen, const uint8_t *input, size_t inlen);
   ```
 
-   Implementations that want to make use of these optimized routines simply include 
-   `fips202.h` (or `sp800-185.h`). The API for `sha3_256` and `sha3_512` follows the 
+   Implementations that want to make use of these optimized routines simply include
+   `fips202.h` (or `sp800-185.h`). The API for `sha3_256` and `sha3_512` follows the
    [SUPERCOP hash API](http://bench.cr.yp.to/call-hash.html).
    The API for `shake128` and `shake256` is very similar, except that it supports variable-length output.
    The SHAKE functions are also accessible via the absorb-squeezeblocks functions, which offer incremental
@@ -292,10 +299,9 @@ When referring to this framework in academic literature, please consider using t
 ```
 
 ## License
-Different parts of **pqm4** have different licenses. 
-Each subdirectory containing implementations contains a LICENSE file stating 
-under what license that specific implementation is released. 
-The files in common contain licensing information at the top of the file (and 
-are currently either public domain or MIT). 
+Different parts of **pqm4** have different licenses.
+Each subdirectory containing implementations contains a LICENSE file stating
+under what license that specific implementation is released.
+The files in common contain licensing information at the top of the file (and
+are currently either public domain or MIT).
 All other code in this repository is released under the conditions of [CC0](http://creativecommons.org/publicdomain/zero/1.0/).
-
