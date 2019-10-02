@@ -1,8 +1,10 @@
-# pqm4
-Post-quantum crypto library for the ARM Cortex-M4 with Optimized implementation of Dilithium's Signing Procedure. This work has been accepted to CARDIS-2019.
+## Optimizations to Dilithium's Signing Procedure
+
+Post-quantum crypto library for the ARM Cortex-M4 with Optimized implementation of Dilithium's Signing Procedure. Dilithium is built upon the "Fiat Shamir with Aborts" framework, its signing procedure performs rejection sampling of its signatures to ensure they do not leak information about the secret key. Thus, the signing procedure is iterative in nature with a number of rejected iterations, which serve as unnecessary overheads hampering its overall performance. As a first contribution, we propose an optimization that reduces the computations in the rejected iterations through early-evaluation of the conditional checks. This allows to perform an early detection of the rejection condition and reject a given iteration as early as possible. We also incorporate a number of standard optimizations such as unrolling and inlining to further improve the speed of the signing procedure. We incorporate and evaluate our optimizations over the software implementation of Dilithium on the ARM Cortex-M4 CPU. As a second contribution, we identify opportunities to present a more refined evaluation of Dilithium's signing procedure in several scenarios where pre-computations can be carried out. We also evaluate the performance of our optimizations and the memory requirements for the pre-computed intermediates in the considered scenarios. We could yield speed-ups in the range of 6% upto 35%, considering all the aforementioned scenarios, thus presenting the fastest software implementation of Dilithium till date. This work has been accepted to CARDIS-2019.
 
 ## Introduction
-The **pqm4** library, benchmarking and testing framework started as a result of the
+
+The above mentioned Optimization ideas are incorporated into the **pqm4** library, which is a benchmarking and testing framework started as a result of the
 [PQCRYPTO](https://pqcrypto.eu.org) project funded by the European Commission in the H2020 program.
 It currently contains implementations post-quantum key-encapsulation mechanisms
 and post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
@@ -11,9 +13,7 @@ In this work, we have optimized the performance of Dilithium's signing procedure
 
 https://eprint.iacr.org/2019/420.pdf
 
-The implementations present in this work are Round2 candidates of the NIST standardization process for Post-Quantum cryptography.
-
-The optimized Dilithium implementations are present in the folder crypto_sign/dilithium2, crypto_sign/dilithium3, crypto_sign/dilithium4. The instructions to compile and run the implementations are stated below.
+The implementations present in this work are Round2 candidates of the NIST standardization process for Post-Quantum cryptography. The optimized Dilithium implementations are present in the folder crypto_sign/dilithium2, crypto_sign/dilithium3, crypto_sign/dilithium4. The instructions to compile and run the implementations are stated below.
 
 The design goals of the library are to offer
 * automated functional testing on a widely available development board;
